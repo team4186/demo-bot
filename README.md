@@ -1,6 +1,6 @@
-# Empty Robot
+# Demo Bot
 
-Sample code used to create new repositories
+Used to operate the demo bot using West-Coast drive.
 
 ## Reminders
 
