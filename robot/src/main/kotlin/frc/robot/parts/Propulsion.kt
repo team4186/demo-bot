@@ -9,16 +9,20 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration
 import com.ctre.phoenix.motorcontrol.can.VictorSPXConfiguration
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.motorcontrol.can.VictorSPX
+import com.ctre.phoenix.motorcontrol.InvertType
+import com.ctre.phoenix.motorcontrol.ControlMode
+import com.revrobotics.config.BaseConfig
 import java.util.function.DoubleConsumer
 
 
-private val BaseConfig = TalonSRXConfiguration()
-// .idleMode(SparkBaseConfig.IdleMode.kCoast)
+val BaseConfigs = hashMapOf(
+    "BaseConfig" to TalonSRXConfiguration()
+)
 
-val DefaultLeftConfig = VictorSPXConfiguration()
-
-val DefaultRightConfig = VictorSPXConfiguration()
-
+val LeftRightConfigs = hashMapOf(
+    "DefaultLeftConfig" to VictorSPXConfiguration(),
+    "DefaultRightConfig" to VictorSPXConfiguration()
+)
 
 class MotorSet(
     val lead: TalonSRX,
@@ -29,10 +33,9 @@ class MotorSet(
     val inverted: Boolean
 ) : DoubleConsumer {
     init {
-        victorConfig.continuousCurrentLimit = 50
-        lead.configureAllSettings(talonConfig: TalonSRXConfiguration)
-        follower0.configureAllSettings(victorConfig: VictorSPXConfiguration)
-        follower1.configureAllSettings(victorConfig: VictorSPXConfiguration)
+        lead.configAllSettings(talonConfig)
+        follower0.configAllSettings(victorConfig)
+        follower1.configAllSettings(victorConfig)
 //        TalonSRXConfiguration()
 //            .apply(baseConfig)
 //            .follow(lead)
@@ -41,7 +44,7 @@ class MotorSet(
         follower1.follow(lead)
         lead.setInverted(inverted)
         follower0.setInverted(InvertType.FollowMaster)
-        follower1:setInverted(InvertType.FollowMaster)
+        follower1.setInverted(InvertType.FollowMaster)
     }
 
     override fun accept(value: Double) {

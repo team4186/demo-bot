@@ -1,13 +1,10 @@
 package frc.robot
 
-import com.revrobotics.spark.SparkLowLevel
-import com.revrobotics.spark.SparkMax
-import frc.robot.parts.Propulsion.BaseConfig
-import frc.robot.parts.Propulsion.DefaultLeftConfig
-import frc.robot.parts.Propulsion.DefaultRightConfig
 import frc.robot.parts.MotorSet
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.motorcontrol.can.VictorSPX
+import frc.robot.parts.BaseConfigs
+import frc.robot.parts.LeftRightConfigs
 /**
  * The [Components] singleton can be used to configure and hold reference to hardware parts
  * used by the [Robot].
@@ -16,21 +13,29 @@ import com.ctre.phoenix.motorcontrol.can.VictorSPX
  */
 object Components {
     object Propulsion {
-        val LeftMotorSet = MotorSet(
-            lead = TalonSRX(11),
-            follower0 = VictorSPX(10),
-            follower1 = VictorSPX(12),
-            talonConfig = BaseConfig,
-            victorConfig = DefaultLeftConfig,
-            inverted = true
-        )
-        val RightMotorSet = MotorSet(
-            lead = TalonSRX(7),
-            follower0 = VictorSPX(3),
-            follower1 = VictorSPX(4),
-            talonConfig = BaseConfig,
-            victorConfig = DefaultRightConfig,
-            inverted = false
-        )
+        val LeftMotorSet = LeftRightConfigs.get("DefaultLeftConfig")?.let {
+            BaseConfigs.get("BaseConfig")?.let { it1 ->
+                MotorSet(
+                    lead = TalonSRX(11),
+                    follower0 = VictorSPX(10),
+                    follower1 = VictorSPX(12),
+                    talonConfig = it1,
+                    victorConfig = it,
+                    inverted = true
+                )
+            }
+        }
+        val RightMotorSet = LeftRightConfigs.get("DefaultRightConfig")?.let {
+            BaseConfigs.get("BaseConfig")?.let { it1 ->
+                MotorSet(
+                    lead = TalonSRX(7),
+                    follower0 = VictorSPX(3),
+                    follower1 = VictorSPX(4),
+                    talonConfig = it1,
+                    victorConfig = it,
+                    inverted = false
+                )
+            }
+        }
     }
 }
