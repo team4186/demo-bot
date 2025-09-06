@@ -5,51 +5,60 @@ import com.revrobotics.spark.SparkBase.ResetMode
 import com.revrobotics.spark.SparkMax
 import com.revrobotics.spark.config.SparkBaseConfig
 import com.revrobotics.spark.config.SparkMaxConfig
+import com.ctre.phoenix.motorcontrol.can.TalonSRXConfiguration
+import com.ctre.phoenix.motorcontrol.can.VictorSPXConfiguration
+import com.ctre.phoenix.motorcontrol.can.TalonSRX
+import com.ctre.phoenix.motorcontrol.can.VictorSPX
 import java.util.function.DoubleConsumer
 
 
-private val BaseConfig = SparkMaxConfig()
-    .smartCurrentLimit(50)
-    .idleMode(SparkBaseConfig.IdleMode.kCoast)
+private val BaseConfig = TalonSRXConfiguration()
+// .idleMode(SparkBaseConfig.IdleMode.kCoast)
 
-val DefaultLeftConfig: SparkBaseConfig = SparkMaxConfig()
-    .apply(BaseConfig)
-    .inverted(true)
+val DefaultLeftConfig = VictorSPXConfiguration()
 
-val DefaultRightConfig: SparkBaseConfig = SparkMaxConfig()
-    .apply(BaseConfig)
-    .inverted(false)
+val DefaultRightConfig = VictorSPXConfiguration()
 
 
 class MotorSet(
-    val lead: SparkMax,
-    val follower0: SparkMax,
-    val baseConfig: SparkBaseConfig,
+    val lead: TalonSRX,
+    val follower0: VictorSPX,
+    val follower1: VictorSPX,
+    val talonConfig: TalonSRXConfiguration,
+    val victorConfig: VictorSPXConfiguration,
+    val inverted: Boolean
 ) : DoubleConsumer {
     init {
-        lead.configure(baseConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
-
-        SparkMaxConfig()
-            .apply(baseConfig)
-            .follow(lead)
-            .let { follower0.configure(it, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters) }
+        victorConfig.continuousCurrentLimit = 50
+        lead.configureAllSettings(talonConfig: TalonSRXConfiguration)
+        follower0.configureAllSettings(victorConfig: VictorSPXConfiguration)
+        follower1.configureAllSettings(victorConfig: VictorSPXConfiguration)
+//        TalonSRXConfiguration()
+//            .apply(baseConfig)
+//            .follow(lead)
+//            .let { follower0.configure(it, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters) }
+        follower0.follow(lead)
+        follower1.follow(lead)
+        lead.setInverted(inverted)
+        follower0.setInverted(InvertType.FollowMaster)
+        follower1:setInverted(InvertType.FollowMaster)
     }
 
     override fun accept(value: Double) {
-        lead.set(value)
+        lead.set(ControlMode.PercentOutput, value * 0.8)
     }
 
     fun stop() {
-        lead.stopMotor()
+        lead.set(ControlMode.PercentOutput, 0.0)
     }
 
-    fun setIdleMode(mode: SparkBaseConfig.IdleMode) {
-        lead.configure(
-            SparkMaxConfig()
-                .apply(baseConfig)
-                .idleMode(mode),
-            ResetMode.kResetSafeParameters,
-            PersistMode.kPersistParameters,
-        )
-    }
+//    fun setIdleMode(mode: SparkBaseConfig.IdleMode) {
+//        lead.configure(
+//            SparkMaxConfig()
+//                .apply(baseConfig)
+//                .idleMode(mode),
+//            ResetMode.kResetSafeParameters,
+//            PersistMode.kPersistParameters,
+//        )
+//    }
 }
