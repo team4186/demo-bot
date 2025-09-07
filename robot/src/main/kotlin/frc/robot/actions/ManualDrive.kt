@@ -25,8 +25,8 @@ fun manualDrive(
     drive: (forward: Double, turn: Double) -> Unit,
 ) {
     drive(
-        attenuated(direction * forward),
-        attenuated(direction * 0.9 * turn),
+        attenuated(direction * 0.9 * forward),
+        attenuated(direction * 0.75 * turn),
     )
 }
 

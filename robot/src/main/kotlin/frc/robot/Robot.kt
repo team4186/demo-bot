@@ -53,7 +53,7 @@ class Robot : TimedRobot() {
         manualDrive(
             forward = joystick0.y,
             turn = joystick0.twist,
-            drive = { forward, turn -> drive.arcadeDrive(forward, turn, true) }
+            drive = { forward, turn -> drive.arcadeDrive(forward, turn, false) }
         )
     }
 
