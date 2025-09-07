@@ -48,7 +48,7 @@ class MotorSet(
     }
 
     override fun accept(value: Double) {
-        lead.set(ControlMode.PercentOutput, value * 0.8)
+        lead.set(ControlMode.PercentOutput, value)
     }
 
     fun stop() {
