@@ -3,8 +3,13 @@ package frc.robot
 import frc.robot.parts.MotorSet
 import com.ctre.phoenix.motorcontrol.can.TalonSRX
 import com.ctre.phoenix.motorcontrol.can.VictorSPX
+import com.revrobotics.spark.SparkLowLevel
+import com.revrobotics.spark.SparkMax
 import frc.robot.parts.BaseConfigs
 import frc.robot.parts.LeftRightConfigs
+import frc.robot.parts.TurretConfig
+import frc.robot.parts.TurretMotor
+
 /**
  * The [Components] singleton can be used to configure and hold reference to hardware parts
  * used by the [Robot].
@@ -12,6 +17,15 @@ import frc.robot.parts.LeftRightConfigs
  * The only gain here is organizational, as it avoids cluttering in the [Robot] class scope.
  */
 object Components {
+
+
+    object Turret {
+        val turretMotor = TurretMotor(
+            lead = SparkMax(41, SparkLowLevel.MotorType.kBrushless),
+            baseConfig = TurretConfig
+        )
+    }
+
     object Propulsion {
         val LeftMotorSet = LeftRightConfigs.get("DefaultLeftConfig")?.let {
             BaseConfigs.get("BaseConfig")?.let { it1 ->

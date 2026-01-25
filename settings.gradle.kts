@@ -3,9 +3,9 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 pluginManagement {
     plugins {
         // Versions at https://plugins.gradle.org/plugin/edu.wpi.first.GradleRIO
-        id("edu.wpi.first.GradleRIO") version "2025.1.1"
+        id("edu.wpi.first.GradleRIO") version "2025.3.2"
         // Versions at https://kotlinlang.org/docs/releases.html#release-details
-        kotlin("jvm") version "2.1.0"
+        kotlin("jvm") version "2.3.0"
     }
 
     repositories {

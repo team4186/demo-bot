@@ -10,15 +10,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import edu.wpi.first.wpilibj2.command.Command
 import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.actions.manualDrive
+import frc.robot.actions.moveTurret
+import frc.robot.Components.Turret
 
 
 class Robot : TimedRobot() {
     private val joystick0 = Joystick(0)
-
+    private val joystick1 = Joystick(1)
     private val drive = DifferentialDrive(
         Components.Propulsion.LeftMotorSet,
         Components.Propulsion.RightMotorSet,
     )
+
+    private val turret = Turret.turretMotor
 
     private val autonomousChooser = SendableChooser<Command>()
 
@@ -54,6 +58,10 @@ class Robot : TimedRobot() {
             forward = joystick0.y,
             turn = joystick0.twist,
             drive = { forward, turn -> drive.arcadeDrive(forward, turn, false) }
+        )
+
+        turret.accept(
+            moveTurret(joystick1.twist)
         )
     }
 
