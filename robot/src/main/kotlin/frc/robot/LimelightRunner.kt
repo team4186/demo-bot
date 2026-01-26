@@ -1,21 +1,37 @@
 package frc.robot
 
-import edu.wpi.first.math.util.Units
 import edu.wpi.first.networktables.NetworkTable
 import edu.wpi.first.networktables.NetworkTableInstance
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
-import kotlin.math.roundToInt
-import kotlin.math.tan
+import java.lang.Math.tan
+
+//fun getXOffset(): Double {
+//    // tx
+//    return botPoseTargetSpace.get(0)
+//}
+//
+//class LimelightRunner () {
+//    private val tableTag: NetworkTable? = null
+//    private val botPoseTargetSpace: DoubleArray
+//    private val botPose: DoubleArray
+//    private val TagID = 0
+//    private val emptyArray: DoubleArray
+//    private val useMegaTag2 = false
+//    private val LLHelpersBotPoseTargetSpace: DoubleArray
+//    fun periodic()  {
+//        SmartDashboard.putNumber("Limelight_Angle", getThetaOffset());
+//    }
+//}
 
 class LimelightRunner(
     private val tableTag: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
 ) {
     fun periodic() {
         SmartDashboard.putBoolean("Has Target Tag?", hasTargetTag)
-        SmartDashboard.putNumber("X Offset", tagxOffset)
-        //SmartDashboard.putNumber("Y Offset", yOffset)
-        SmartDashboard.putNumber("% of Image", tagArea)
-        SmartDashboard.putNumber("Distance", Units.metersToInches(distance))
+//        SmartDashboard.putNumber("X Offset", tagxOffset)
+//        //SmartDashboard.putNumber("Y Offset", yOffset)
+//        SmartDashboard.putNumber("% of Image", tagArea)
+//        SmartDashboard.putNumber("Distance", Units.metersToInches(distance))
     }
 
 
@@ -61,8 +77,8 @@ class LimelightRunner(
         tableTag.getEntry("ledMode").setValue(if (mode) 3.0 else 1.0)
     }
 
-    fun lookupTableRound(distanceToTag: Double): Int =
-        ((distanceToTag - 36.37) / 12.0)
-            .roundToInt()
-            .coerceIn(0, 11)
+//    fun lookupTableRound(distanceToTag: Double): Int =
+//        ((distanceToTag - 36.37) / 12.0)
+//            .roundToInt()
+//            .coerceIn(0, 11)
 }

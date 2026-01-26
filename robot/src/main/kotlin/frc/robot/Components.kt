@@ -26,30 +26,30 @@ object Components {
         )
     }
 
-    object Propulsion {
-        val LeftMotorSet = LeftRightConfigs.get("DefaultLeftConfig")?.let {
-            BaseConfigs.get("BaseConfig")?.let { it1 ->
-                MotorSet(
-                    lead = TalonSRX(11),
-                    follower0 = VictorSPX(10),
-                    follower1 = VictorSPX(12),
-                    talonConfig = it1,
-                    victorConfig = it,
-                    inverted = true
-                )
-            }
-        }
-        val RightMotorSet = LeftRightConfigs.get("DefaultRightConfig")?.let {
-            BaseConfigs.get("BaseConfig")?.let { it1 ->
-                MotorSet(
-                    lead = TalonSRX(7),
-                    follower0 = VictorSPX(3),
-                    follower1 = VictorSPX(4),
-                    talonConfig = it1,
-                    victorConfig = it,
-                    inverted = false
-                )
-            }
-        }
-    }
+//    object Propulsion {
+//        val LeftMotorSet = LeftRightConfigs.get("DefaultLeftConfig")?.let {
+//            BaseConfigs.get("BaseConfig")?.let { it1 ->
+//                MotorSet(
+//                    lead = TalonSRX(11),
+//                    follower0 = VictorSPX(10),
+//                    follower1 = VictorSPX(12),
+//                    talonConfig = it1,
+//                    victorConfig = it,
+//                    inverted = true
+//                )
+//            }
+//        }
+//        val RightMotorSet = LeftRightConfigs.get("DefaultRightConfig")?.let {
+//            BaseConfigs.get("BaseConfig")?.let { it1 ->
+//                MotorSet(
+//                    lead = TalonSRX(7),
+//                    follower0 = VictorSPX(3),
+//                    follower1 = VictorSPX(4),
+//                    talonConfig = it1,
+//                    victorConfig = it,
+//                    inverted = false
+//                )
+//            }
+//        }
+//    }
 }

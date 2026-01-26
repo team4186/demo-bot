@@ -12,16 +12,16 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler
 import frc.robot.actions.manualDrive
 import frc.robot.actions.moveTurret
 import frc.robot.Components.Turret
-
+import frc.robot.LimelightRunner
 
 class Robot : TimedRobot() {
     private val joystick0 = Joystick(0)
     private val joystick1 = Joystick(1)
-    private val drive = DifferentialDrive(
-        Components.Propulsion.LeftMotorSet,
-        Components.Propulsion.RightMotorSet,
-    )
-
+//    private val drive = DifferentialDrive(
+//        Components.Propulsion.LeftMotorSet,
+//        Components.Propulsion.RightMotorSet,
+//    )
+    private val Limelight = LimelightRunner()
     private val turret = Turret.turretMotor
 
     private val autonomousChooser = SendableChooser<Command>()
@@ -29,36 +29,37 @@ class Robot : TimedRobot() {
     override fun robotInit() {
         HAL.report(FRCNetComm.tResourceType.kResourceType_Language, FRCNetComm.tInstances.kLanguage_Kotlin)
 
-        with(autonomousChooser) {
-            setDefaultOption("Nothing", null)
-            SmartDashboard.putData("Autonomous Mode", this)
-        }
+//        with(autonomousChooser) {
+//            setDefaultOption("Nothing", null)
+//            SmartDashboard.putData("Autonomous Mode", this)
+//        }
     }
 
     override fun robotPeriodic() {
-        CommandScheduler.getInstance().run()
+//        CommandScheduler.getInstance().run()
+        Limelight.periodic()
     }
 
     override fun autonomousInit() {
-        autonomousChooser.selected?.schedule()
+//        autonomousChooser.selected?.schedule()
     }
 
     override fun autonomousPeriodic() {
     }
 
     override fun autonomousExit() {
-        CommandScheduler.getInstance().cancelAll()
+//        CommandScheduler.getInstance().cancelAll()
     }
 
     override fun teleopInit() {
     }
 
     override fun teleopPeriodic() {
-        manualDrive(
-            forward = joystick0.y,
-            turn = joystick0.twist,
-            drive = { forward, turn -> drive.arcadeDrive(forward, turn, false) }
-        )
+//        manualDrive(
+//            forward = joystick0.y,
+//            turn = joystick0.twist,
+//            drive = { forward, turn -> drive.arcadeDrive(forward, turn, false) }
+//        )
 
         turret.accept(
             moveTurret(joystick1.twist)
@@ -66,7 +67,7 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopExit() {
-        CommandScheduler.getInstance().cancelAll()
+//        CommandScheduler.getInstance().cancelAll()
     }
 
     override fun testInit() {
