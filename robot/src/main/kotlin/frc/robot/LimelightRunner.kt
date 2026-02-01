@@ -28,11 +28,16 @@ import java.lang.Math.tan
 class LimelightRunner(
     private val tableTag: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight"),
     private val tvSub: DoubleSubscriber = tableTag.getDoubleTopic("tv").subscribe(0.0),
+    private val txSub: DoubleSubscriber = tableTag.getDoubleTopic("tx").subscribe(0.0),
+    private val tySub: DoubleSubscriber = tableTag.getDoubleTopic("ty").subscribe(0.0),
     private val ledPub: DoublePublisher = tableTag.getDoubleTopic("ledMode").publish()
 ) {
     fun periodic() {
          SmartDashboard.putBoolean("Has Target Tag?", hasTargetTag)
          ledPub.set( (if (hasTargetTag) 3.0 else 1.0) )
+
+        SmartDashboard.putNumber("tx", txSub.get())
+        SmartDashboard.putNumber("ty", tySub.get())
 //        SmartDashboard.putNumber("X Offset", tagxOffset)
 //        //SmartDashboard.putNumber("Y Offset", yOffset)
 //        SmartDashboard.putNumber("% of Image", tagArea)
