@@ -21,7 +21,8 @@ class Robot : TimedRobot() {
 //        Components.Propulsion.LeftMotorSet,
 //        Components.Propulsion.RightMotorSet,
 //    )
-    private val Limelight = LimelightRunner()
+
+    private var limelight: LimelightRunner = LimelightRunner()
     private val turret = Turret.turretMotor
 
     private val autonomousChooser = SendableChooser<Command>()
@@ -37,7 +38,7 @@ class Robot : TimedRobot() {
 
     override fun robotPeriodic() {
 //        CommandScheduler.getInstance().run()
-        Limelight.periodic()
+        limelight.periodic()
     }
 
     override fun autonomousInit() {
@@ -71,5 +72,10 @@ class Robot : TimedRobot() {
     }
 
     override fun testInit() {
+    }
+
+    override fun close() {
+        super.close()
+        limelight.close()
     }
 }

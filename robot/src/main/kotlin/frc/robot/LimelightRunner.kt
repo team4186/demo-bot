@@ -1,7 +1,9 @@
 package frc.robot
 
+import edu.wpi.first.networktables.DoublePublisher
 import edu.wpi.first.networktables.NetworkTable
 import edu.wpi.first.networktables.NetworkTableInstance
+import edu.wpi.first.networktables.DoubleSubscriber
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard
 import java.lang.Math.tan
 
@@ -24,10 +26,13 @@ import java.lang.Math.tan
 //}
 
 class LimelightRunner(
-    private val tableTag: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight")
+    private val tableTag: NetworkTable = NetworkTableInstance.getDefault().getTable("limelight"),
+    private val tvSub: DoubleSubscriber = tableTag.getDoubleTopic("tv").subscribe(0.0),
+    private val ledPub: DoublePublisher = tableTag.getDoubleTopic("ledMode").publish()
 ) {
     fun periodic() {
-        SmartDashboard.putBoolean("Has Target Tag?", hasTargetTag)
+         SmartDashboard.putBoolean("Has Target Tag?", hasTargetTag)
+         ledPub.set( (if (hasTargetTag) 3.0 else 1.0) )
 //        SmartDashboard.putNumber("X Offset", tagxOffset)
 //        //SmartDashboard.putNumber("Y Offset", yOffset)
 //        SmartDashboard.putNumber("% of Image", tagArea)
@@ -35,11 +40,15 @@ class LimelightRunner(
     }
 
 
-    val hasTargetTag: Boolean
+    private val hasTargetTag: Boolean
         get() {
-            return tableTag.getEntry("tv").getDouble(0.0) > 0.0
-
+            return tvSub.get() > 0.0
         }
+
+    fun close (){
+        tvSub.close()
+        ledPub.close()
+    }
 
     val tagxOffset: Double get() = tableTag.getEntry("tx").getDouble(0.0) // -29.8 to 29.8 degrees
     val tagyOffset: Double get() = tableTag.getEntry("ty").getDouble(0.0)
