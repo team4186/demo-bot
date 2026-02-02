@@ -52,6 +52,8 @@ class LimelightRunner(
 
     fun close (){
         tvSub.close()
+        txSub.close()
+        tySub.close()
         ledPub.close()
     }
 

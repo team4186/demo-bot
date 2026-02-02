@@ -2,6 +2,7 @@ package frc.robot
 
 import edu.wpi.first.hal.FRCNetComm
 import edu.wpi.first.hal.HAL
+import edu.wpi.first.math.controller.PIDController
 import edu.wpi.first.wpilibj.Joystick
 import edu.wpi.first.wpilibj.TimedRobot
 import edu.wpi.first.wpilibj.drive.DifferentialDrive
@@ -13,6 +14,7 @@ import frc.robot.actions.manualDrive
 import frc.robot.actions.moveTurret
 import frc.robot.Components.Turret
 import frc.robot.LimelightRunner
+import frc.robot.actions.alignTurret
 
 class Robot : TimedRobot() {
     private val joystick0 = Joystick(0)
@@ -24,11 +26,17 @@ class Robot : TimedRobot() {
 
     private var limelight: LimelightRunner = LimelightRunner()
     private val turret = Turret.turretMotor
+    private val alignPID: PIDController = PIDController(
+        0.0065,
+        0.0,
+        0.00375)
 
     private val autonomousChooser = SendableChooser<Command>()
 
     override fun robotInit() {
         HAL.report(FRCNetComm.tResourceType.kResourceType_Language, FRCNetComm.tInstances.kLanguage_Kotlin)
+
+        enableLiveWindowInTest(true)
 
 //        with(autonomousChooser) {
 //            setDefaultOption("Nothing", null)
@@ -74,6 +82,21 @@ class Robot : TimedRobot() {
     override fun testInit() {
     }
 
+    override fun testPeriodic() {
+        val xOffset: Double = SmartDashboard.getNumber("tx", 0.0)
+
+        val result: Double = alignTurret(
+            xOffset,
+            alignPID
+        )
+
+        SmartDashboard.putNumber("Align results", result)
+
+        turret.accept(
+            // moveTurret(joystick1.twist)
+            result
+        )
+    }
     override fun close() {
         super.close()
         limelight.close()
