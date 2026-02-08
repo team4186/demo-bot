@@ -33,8 +33,9 @@ class LimelightRunner(
     private val ledPub: DoublePublisher = tableTag.getDoubleTopic("ledMode").publish()
 ) {
     fun periodic() {
-         SmartDashboard.putBoolean("Has Target Tag?", hasTargetTag)
-         ledPub.set( (if (hasTargetTag) 3.0 else 1.0) )
+        val isThereTargetTag: Boolean = hasTargetTag
+        SmartDashboard.putBoolean("Has Target Tag?", isThereTargetTag)
+        ledPub.set( (if (isThereTargetTag) 3.0 else 1.0) )
 
         SmartDashboard.putNumber("tx", txSub.get())
         SmartDashboard.putNumber("ty", tySub.get())

@@ -1,5 +1,6 @@
 package frc.robot.parts
 
+import com.revrobotics.RelativeEncoder
 import com.revrobotics.spark.SparkBase.ResetMode
 import com.revrobotics.spark.SparkBase.PersistMode
 import com.revrobotics.spark.SparkMax
@@ -20,6 +21,9 @@ class TurretMotor(
         lead.configure(baseConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
     }
 
+    fun getRelativeEncoder(): RelativeEncoder {
+        return lead.getEncoder()
+    }
 
     override fun accept(value: Double) {
         lead.set(value)

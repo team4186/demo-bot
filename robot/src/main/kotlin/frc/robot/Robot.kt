@@ -1,5 +1,6 @@
 package frc.robot
 
+import com.revrobotics.RelativeEncoder
 import edu.wpi.first.hal.FRCNetComm
 import edu.wpi.first.hal.HAL
 import edu.wpi.first.math.controller.PIDController
@@ -26,10 +27,12 @@ class Robot : TimedRobot() {
 
     private var limelight: LimelightRunner = LimelightRunner()
     private val turret = Turret.turretMotor
+    private val turretEncoder: RelativeEncoder = turret.getRelativeEncoder()
     private val alignPID: PIDController = PIDController(
         0.0065,
         0.0,
         0.00375)
+    var saveAngle: Double = 0.0
 
     private val autonomousChooser = SendableChooser<Command>()
 
@@ -37,6 +40,9 @@ class Robot : TimedRobot() {
         HAL.report(FRCNetComm.tResourceType.kResourceType_Language, FRCNetComm.tInstances.kLanguage_Kotlin)
 
         enableLiveWindowInTest(true)
+
+        turretEncoder.setPosition(0.0)
+
 
 //        with(autonomousChooser) {
 //            setDefaultOption("Nothing", null)
@@ -47,6 +53,10 @@ class Robot : TimedRobot() {
     override fun robotPeriodic() {
 //        CommandScheduler.getInstance().run()
         limelight.periodic()
+        SmartDashboard.putNumber("Current Turret Position:",turretEncoder.getPosition()*18)
+        SmartDashboard.putNumber("Save Angle:", saveAngle)
+
+
     }
 
     override fun autonomousInit() {
@@ -64,6 +74,10 @@ class Robot : TimedRobot() {
     }
 
     override fun teleopPeriodic() {
+        if (joystick1.triggerPressed) {
+            turretEncoder.setPosition(0.0)
+        }
+
 //        manualDrive(
 //            forward = joystick0.y,
 //            turn = joystick0.twist,
@@ -84,10 +98,15 @@ class Robot : TimedRobot() {
 
     override fun testPeriodic() {
         val xOffset: Double = SmartDashboard.getNumber("tx", 0.0)
+        val hasTag: Boolean = SmartDashboard.getBoolean("Has Target Tag?", false)
 
+        if (hasTag){
+            saveAngle = xOffset
+        }
         val result: Double = alignTurret(
-            xOffset,
-            alignPID
+            saveAngle,
+            alignPID,
+            turretEncoder.getPosition() * 18
         )
 
         SmartDashboard.putNumber("Align results", result)

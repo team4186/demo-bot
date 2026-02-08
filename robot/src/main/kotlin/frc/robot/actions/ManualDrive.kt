@@ -23,10 +23,11 @@ fun manualDrive(
     turn: Double,
     direction: Direction = Direction.Forward,
     drive: (forward: Double, turn: Double) -> Unit,
+    turnSensitivity: Double
 ) {
     drive(
-        attenuated(direction * 0.9 * forward),
-        attenuated(direction * 0.75 * turn),
+        attenuated(direction * forward),
+        attenuated(direction * turn * (turnSensitivity + 1)/2),
     )
 }
 
