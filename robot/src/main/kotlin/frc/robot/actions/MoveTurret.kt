@@ -33,17 +33,20 @@ fun alignTurretCameraOnly(
 
 fun alignTurret(
     angleOffset: Double,
-    pid: PIDController,
+    pidFar: PIDController,
+    pidClose: PIDController,
     currentLocation: Double
 ): Double {
-    var result = pid.calculate(angleOffset, (currentLocation-angleOffset) )
-    val sign = if (result >= 0) 1 else -1
-    val thres: Double = 0.2
-    if (result > thres || result < -thres) {
-        result = 0.2 * sign
+    val diff: Double = angleOffset - currentLocation
+    var result: Double
 
+    if (Math.abs(diff) > 45) {
+        result = pidFar.calculate(currentLocation, (diff) )
+    } else {
+        result = pidClose.calculate(currentLocation, (diff) )
     }
-    return -result
+
+    return Math.max(-0.4, Math.min(0.4, result ))
 }
 
 

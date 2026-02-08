@@ -19,6 +19,7 @@ class TurretMotor(
 ) : DoubleConsumer {
     init {
         lead.configure(baseConfig, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters)
+        // lead.
     }
 
     fun getRelativeEncoder(): RelativeEncoder {
@@ -26,7 +27,7 @@ class TurretMotor(
     }
 
     override fun accept(value: Double) {
-        lead.set(value)
+        lead.set(value) // NOTE: Set -1 to 1 later
     }
 
 

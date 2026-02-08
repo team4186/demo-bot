@@ -28,11 +28,20 @@ class Robot : TimedRobot() {
     private var limelight: LimelightRunner = LimelightRunner()
     private val turret = Turret.turretMotor
     private val turretEncoder: RelativeEncoder = turret.getRelativeEncoder()
-    private val alignPID: PIDController = PIDController(
-        0.0065,
+    private val alignPIDFar: PIDController = PIDController(
+        // 0.003,
+        // 0.0,
+        // 0.0015)
         0.0,
-        0.00375)
-    var saveAngle: Double = 0.0
+        0.0,
+        0.0)
+    private val alignPIDClose: PIDController = PIDController(
+        0.0,
+        0.0,
+        0.0
+    )
+
+    private var saveAngle: Double = 0.0
 
     private val autonomousChooser = SendableChooser<Command>()
 
@@ -55,8 +64,6 @@ class Robot : TimedRobot() {
         limelight.periodic()
         SmartDashboard.putNumber("Current Turret Position:",turretEncoder.getPosition()*18)
         SmartDashboard.putNumber("Save Angle:", saveAngle)
-
-
     }
 
     override fun autonomousInit() {
@@ -103,9 +110,11 @@ class Robot : TimedRobot() {
         if (hasTag){
             saveAngle = xOffset
         }
+
         val result: Double = alignTurret(
             saveAngle,
-            alignPID,
+            alignPIDFar,
+            alignPIDClose,
             turretEncoder.getPosition() * 18
         )
 
